@@ -337,7 +337,7 @@ def main():
         learning_rate = tf.train.exponential_decay(
             args.learning_rate,
             tf.maximum(0, global_step - args.decay_start_iteration),
-            args.train_iterations - args.decay_start_iteration, 0.001)
+            args.train_iterations - args.decay_start_iteration, 0.01)
     else:
         learning_rate = args.learning_rate
     tf.summary.scalar('learning_rate', learning_rate)
