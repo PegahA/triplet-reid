@@ -123,6 +123,9 @@ parser.add_argument(
     help='After how many iterations a checkpoint is stored. Set this to 0 to '
          'disable intermediate storing. This will result in only one final '
          'checkpoint.')
+parser.add_argument(
+    '--standardize', action='store_true', default=False,
+    help='When this flag is provided, standardization is performed.')
 
 parser.add_argument(
     '--flip_augment', action='store_true', default=False,
@@ -258,6 +261,11 @@ def main():
             image_size=pre_crop_size if args.crop_augment else net_input_size),
         num_parallel_calls=args.loading_threads)
 
+    # Standardize the data if specified by the arguments.
+    if args.standardize:
+        dataset = dataset.map(
+            lambda im, fid, pid: (tf.image.per_image_standardization(im), fid, pid))
+
     # Augment the data if specified by the arguments.
     if args.flip_augment:
         dataset = dataset.map(
@@ -337,7 +345,7 @@ def main():
         learning_rate = tf.train.exponential_decay(
             args.learning_rate,
             tf.maximum(0, global_step - args.decay_start_iteration),
-            args.train_iterations - args.decay_start_iteration, 0.01)
+            args.train_iterations - args.decay_start_iteration, 0.001)
     else:
         learning_rate = args.learning_rate
     tf.summary.scalar('learning_rate', learning_rate)
