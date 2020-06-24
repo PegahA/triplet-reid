@@ -123,6 +123,7 @@ parser.add_argument(
     help='After how many iterations a checkpoint is stored. Set this to 0 to '
          'disable intermediate storing. This will result in only one final '
          'checkpoint.')
+
 parser.add_argument(
     '--standardize', action='store_true', default=False,
     help='When this flag is provided, standardization is performed.')
@@ -360,10 +361,11 @@ def main():
     # Define a saver for the complete model.
     checkpoint_saver = tf.train.Saver(max_to_keep=0)
 
-    config = tf.ConfigProto()
-    config.gpu_options.allow_growth=True
+    #config = tf.ConfigProto()
+    #config.gpu_options.allow_growth=True
     
-    with tf.Session(config=config) as sess:
+    #with tf.Session(config=config) as sess:
+    with tf.Session() as sess:
         if args.resume:
             # In case we're resuming, simply load the full checkpoint to init.
             last_checkpoint = tf.train.latest_checkpoint(args.experiment_root)
