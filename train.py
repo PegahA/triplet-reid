@@ -271,6 +271,8 @@ def main():
     if args.flip_augment:
         dataset = dataset.map(
             lambda im, fid, pid: (tf.image.random_flip_left_right(im), fid, pid))
+            lambda im, fid, pid: (tf.image.random_flip_up_down(im), fid, pid))
+
     if args.crop_augment:
         dataset = dataset.map(
             lambda im, fid, pid: (tf.random_crop(im, net_input_size + (3,)), fid, pid))
